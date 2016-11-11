@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta name="description" content="Whether you\'re looking for a specific place, or just have a general idea, find out what interesting places are on your way!" />
+	<meta name="keywords" content="on the way, places, what\'s around, route boxer, route, search along route" />
+	<meta name="author" content="Justin Mastic"
+	<meta name="robots" content="index, follow" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="css/buttons.css" />
+	<link type="text/css" href="css/main.css" rel="stylesheet" />
+	<link type="text/css" href="css/jquery-ui/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="static/css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/jquery-ui-1.8.2.custom.css" />
+	<link rel="stylesheet" type="text/css" href="shadowbox/shadowbox.css">
+    <style type="text/css">
+		html { height: 100% }
+		body { height: 100%; margin: 0; padding: 0; font-family: Tahoma, Arial, sans-serif; }
+		
+		#heading { background: #F1F1F1; }
+		#left, #map_canvas { background: #fff }
+
+		#left, #map { position: absolute; bottom: 0; } 
+		#heading { height: 40px; box-shadow: 0 4px 4px #ccc; z-index: 999; }
+		#left { left: 0; width: 25%; z-index: 555; overflow-y: auto; overflow-x: hidden; }
+		#map_canvas { z-index: 0; right: 0; left: 25%; }
+		
+		#logo { padding-left: 25px; position: relative; top: 7px; font-size: 20px; font-weight: bold; }
+		#right_heading { float: right; padding-right: 20px; position: relative; top: -13px; font-size: 14px; font-weight: bold; }
+		
+		.block { width: 80%; margin: 0; padding: 15px 0 0 15px; }
+		.block input { clear: both; width: 100%; padding: 2px 5px; }
+		#start { margin-bottom: 10px; font-family: Tahoma, Arial, sans-serif; font-size: 10pt; }
+		#amount { padding: 5px 0 5px 5px; font-weight: bold; }
+		.hr { width: 80%; margin-bottom: 0px; }
+		#category { margin-bottom: 10px; }
+		#placename { margin-bottom: 10px; }
+		#popcategories input[type="checkbox"] { float: left; width: 13px; margin-left: 1px; }
+		#popcategories div { clear: both; }
+		
+		#left_footer { position: absolute; background: #F1F1F1; width: 100%; bottom: 0; padding: 15px 0px 15px 15px; }
+		#left_footer a { color: #505050; font-weight: bold; }
+		
+		.shadowL, .shadowT { background-color: #ccc; z-index: 555; }
+		.shadow1 { opacity:0.8; filter:alpha(opacity=80); height: 100%; width: 1px; position: absolute; left: 25%; }
+		.shadow2 { opacity:0.6; filter:alpha(opacity=60); height: 100%; width: 1px; position: absolute; left: 25%; }
+		.shadow3 { opacity:0.4; filter:alpha(opacity=40); height: 100%; width: 1px; position: absolute; left: 25%; }
+		.shadow4 { opacity:0.2; filter:alpha(opacity=20); height: 100%; width: 1px; position: absolute; left: 25%; }
+		.shadow5 { opacity:0.1; filter:alpha(opacity=10); height: 100%; width: 1px; position: absolute; left: 25%; }
+		.shadow11 { opacity:0.8; filter:alpha(opacity=80); height: 1px; width: 100%; position: absolute; top: 40; right: 0; }
+		.shadow12 { opacity:0.6; filter:alpha(opacity=60); height: 1px; width: 100%; position: absolute; top: 40; right: 0; }
+		.shadow13 { opacity:0.4; filter:alpha(opacity=40); height: 1px; width: 100%; position: absolute; top: 40; right: 0; }
+		.shadow14 { opacity:0.2; filter:alpha(opacity=20); height: 1px; width: 100%; position: absolute; top: 40; right: 0; }
+		.shadow15 { opacity:0.1; filter:alpha(opacity=10); height: 1px; width: 100%; position: absolute; top: 40; right: 0; }
+		
+		a.disabled { color: #D6D6D6; }
+		a.disabled:hover { color: #D6D6D6; }
+		
+		#directionspanel { display: none; }
+		#resultspanel { display: none; padding-top: 15px; }
+		
+		.result { padding: 5px; }
+		.resultname a { font-size: 14px; }
+		.result:hover { background: #E8EEFF; }
+		
+		#buttonblock { width: 100%; }
+		#updatebutton { width: 40px; }
+		
+		.deleteicon { position: relative; top: 5px; }
+		.deleteicon:hover { cursor: pointer; }
+		.namedeleteicon { position: relative; top: 5px; }
+		.namedeleteicon:hover { cursor: pointer; }
+		
+		#sb-body { background: #FFF; }
+		#sb-body-inner { padding: 10px; width: 90%; }
+		
+		#cat_all { margin: 5px 0 0 5px; }
+		#name_all { margin: 5px 0 0 5px; }
+		
+		.warning { color: red; margin: -5px 0 5px 0; }
+		
+		.resultdirection { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px; }
+		.resultdirection a { text-decoration: none; }
+		.resultdirection a:hover { text-decoration: underline; }
+    </style>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-34480126-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+	<title>What Is On The Way</title>
+</head>
+<body>
+	<div id="heading">
+		<div id="left_heading"><span id="logo">What Is On The Way?</span></div>
+	</div>
+	<div class="shadowT shadow11">&nbsp;</div>
+	<div class="shadowT shadow12">&nbsp;</div>
+	<div class="shadowT shadow13">&nbsp;</div>
+	<div class="shadowT shadow14">&nbsp;</div>
+	<div class="shadowT shadow15">&nbsp;</div>
+	<div id="left" style="width: 25%; height: 100%;">
+		<div class="block" id="buttonblock" style="margin: 0 auto;">			
+			<a href="#" id="searchbutton" class="button" title="Search">Search</a>
+			<a href="#" id="directionsbutton" class="button disabled" title="Directions">Directions</a>
+			<a href="#" id="resultsbutton" class="button disabled" title="Results">Results</a>
+			<a href="javascript:resetAll();" title="Reset Options"><img src="img/refresh.png" style="height: 18px; width: 18px;" /></a>
+		</div>
+		<div id="searchpanel">
+			<div class="block">
+				<label>Start</label>
+				<input id="start" placeholder="Start typing your starting location..." class="gmaps-input-address" type="text" />
+				<label>End</label>
+				<input id="end" placeholder="Start typing your destination..." class="gmaps-input-address" type="text" />
+			</div>
+			<hr class="hr" />
+			<div class="block">
+				<label>Distance From Route</label>
+				<div id="amount"></div>
+				<div id="slider-range"></div>
+			</div>
+			<hr class="hr" />
+			<div class="block" style="margin: 0 auto;">			
+				<a href="#" id="bycategorybutton" class="button" title="Search">By Category</a>
+				<a href="#" id="bynamebutton" class="button" title="Directions">By Place Name</a>
+			</div>
+			<div class="block" id="categoryblock">
+				<label>By Category</label>
+				<input id="category" placeholder="Start typing a category name..." type="text" />
+				<label>Active Categories</label>
+				<div id="activecats">
+					<div id='cat_all'>
+						<span class='deletecat'>All Categories</span>
+					</div>
+				</div>
+			</div>
+			<div class="block" id="placenameblock" style="display: none">
+				<label>By Place Name</label>
+				<input id="placename" placeholder="Enter a place name..." type="text" />
+				<div class="warning"></div>
+				<label>Active Place Names</label>
+				<div id="activenames">
+					<div id='name_all'>
+						<span class='deletename'>All Places</span>
+					</div>
+				</div>
+			</div>
+			<div id="left_footer">
+				<a href="javascript:shadowbox();">About Us</a>
+			</div>
+		</div>
+		<div id="directionspanel"></div>
+		<div id="resultspanel"></div>
+	</div>
+	<div id="shadow1" class="shadowL shadow1">&nbsp;</div>
+	<div id="shadow2" class="shadowL shadow2">&nbsp;</div>
+	<div id="shadow3" class="shadowL shadow3">&nbsp;</div>
+	<div id="shadow4" class="shadowL shadow4">&nbsp;</div>
+	<div id="shadow5" class="shadowL shadow5">&nbsp;</div>
+	<div id="mapframe"><div id="mapwindow"></div></div>
+	<div id="map_container">
+		<div id="map_canvas" style="width:75%; height:100%;"></div>
+	</div>
+	
+	<div id="aboutus" style="display: none;">
+		Hello and welcome to <strong>WhatIsOnTheWay.com!</strong><br /><br />
+		This site was designed and is maintained by <strong>Lentiscus</strong>, a one-person web development 
+		operation. If you have any questions, concerns, comments, or anything else, please feel free to 
+		reach out to me through the <a target="_new" href="https://www.facebook.com/Lentiscus">Lentiscus Facebook page</a>!<br /><br />
+		This site is <strong>free to use</strong>, and there are no plans to charge for this service. I do ask that if you 
+		enjoy the site, hate it, have suggestions, etc... that you please let me know on the Facebook page.<br /><br />
+		Again, thank you for visiting!<br /><br />
+		- Lentiscus
+	</div>
+	
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAXAuCJXuhp_qjuk83VOKPQWc7y1GoTTQU&sensor=false&libraries=places"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery-ui-1.8.2.custom.min.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.mouse.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.slider.js"></script>
+	<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/routeboxer/src/RouteBoxer.js"></script>
+	<script type="text/javascript" src="js/jquery.jsonSuggest-2.min.js"></script>
+	<script type="text/javascript" src="shadowbox/shadowbox.js"></script>
+	<script type="text/javascript">
+		Shadowbox.init({
+			handleOversize: "drag",
+			modal: true
+		});
+		
+		var auhtml = $("#aboutus").html();
+		
+		function shadowbox() {
+			Shadowbox.open({
+				content:    auhtml,
+				player:     "html",
+				title:      "Welcome",
+				height:     400,
+				width:      500
+			});
+		}
+	</script>
+	<script type="text/javascript">
+		function setMapSize(center) {
+			var containerHeight = $(window).height();
+			var headerHeight = $("#heading").height();
+			$("#map_canvas").height(containerHeight - headerHeight);
+			$("#left").height(containerHeight - headerHeight);
+			$(".shadowL").height(containerHeight - headerHeight);
+			var leftWidth = $("#left").width() - 1;
+			for(var i=0; i < 5; i++)
+				$(".shadow"+i).css("left", (leftWidth+i));
+			for(var i=0; i < 5; i++)
+				$(".shadow1"+i).css("top", (headerHeight-1)+i);
+			$("#left_footer").width(leftWidth - 15);
+		}
+		
+		function geocode(latlng) {
+			var Rasc = "";
+			geocoder.geocode({'latLng': latlng}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					if (results[0]) {
+						Rasc = results[0].formatted_address;
+						//alert(Rasc);
+					}
+				} 
+				return Rasc;
+			});
+		}
+		
+		var marker, map, geocoder, directionsDisplay, directionsRenderer = null;
+        var directionsService = new google.maps.DirectionsService();
+		var boxpolys = null;
+		var directions = null;
+		var routeBoxer = null;
+		var box_number = null;
+		var types = null;
+		var using_destination = false;
+		var fullBounds = new google.maps.LatLngBounds();
+		var active_categories = new Array();
+		var circle = null;
+		var autocomplete = null, autocomplete2 = null;
+		var infowindow = new google.maps.InfoWindow();
+		var startSet = false, endSet = false;
+		var markersArray = [];
+		var routeBoxer = new RouteBoxer();
+		var distance = 1; // km
+		var activecategories = [];
+		var activenames = [];
+		var usingName = false;
+		var markerID = 0;
+		
+		function milesToKilometers(miles) {
+			return (miles * 1.60934);
+		}
+		
+		function resetAll() {
+			// Clear all markers
+			clearOverlays();
+			// Clear active categories
+			activeCategories = null;
+			// Clear the input boxes
+			$("#start").val("");
+			$("#end").val("");
+			// Reset the slider
+			$("#slider-range").slider({
+				range: "min",
+				min: 0,
+				max: 25,
+				value: 1,
+				slide: function(event, ui) {
+					$("#amount").html(ui.value+" mi");
+					if(bothset())
+						route();
+				}
+			});
+			// Set the slider on the page
+			$("#amount").html($("#slider-range").slider("value")+" mi");
+		}
+		
+		
+		// Check if both the start and end inputs are both non-empty
+		function bothElementsSet() {
+			bothSet = true;
+			if($("#start").val() == "" || $("#start").val() == "Start typing your starting location...") {
+				bothSet = false;
+			}
+			if($("#end").val() == "" || $("#end").val() == "Start typing your destination...") {
+				bothSet = false;
+			}
+			
+			return bothSet;
+		}
+		
+		// This function maps the route between start and end
+		function route() {
+			// Clear the existing markers
+			clearOverlays();
+			// Clear the results panel
+			$("#resultspanel").html("");
+		
+			// The directions request parameters
+			var request = {
+				origin: $("#start").val(),
+				destination: $("#end").val(),
+				travelMode: google.maps.DirectionsTravelMode.DRIVING
+			}
+			
+			// Make the directions request
+			directionsService.route(request, function(result, status) {
+				// If the directions came back okay...
+				if (status == google.maps.DirectionsStatus.OK) {
+					directionsRenderer.setDirections(result);
+					directionsDisplay.setDirections(result);
+					// Show the driving directions
+					directionsDisplay.setPanel(document.getElementById("directionspanel"));
+
+					// Box around the overview path of the first route
+					var path = result.routes[0].overview_path;
+					var boxes = routeBoxer.box(path, milesToKilometers($("#slider-range").slider("value")));
+
+					//drawBoxes(boxes);
+					search_boxes(boxes);
+
+					// Activate the directions button
+					$("#directionsbutton").removeClass("disabled");
+					// showpanel("directionspanel");
+				} else {
+					alert("Directions query failed: " + status);
+				}
+			});
+		}
+		
+		// This function maps the route between start and end without boxing
+		function routeNoBox(addr) {
+			// Clear infowindows if open
+			if (infowindow) infowindow.close();
+			// Set the end point
+			$("#end").val(addr);
+			
+			// Clear the results panel
+			$("#resultspanel").html("");
+		
+			// The directions request parameters
+			var request = {
+				origin: $("#start").val(),
+				destination: addr,
+				travelMode: google.maps.DirectionsTravelMode.DRIVING
+			}
+			
+			// Make the directions request
+			directionsService.route(request, function(result, status) {
+				// If the directions came back okay...
+				if (status == google.maps.DirectionsStatus.OK) {
+					directionsRenderer.setDirections(result);
+					directionsDisplay.setDirections(result);
+					// Show the driving directions
+					directionsDisplay.setPanel(document.getElementById("directionspanel"));
+
+					// Activate the directions button
+					$("#directionsbutton").removeClass("disabled");
+					showpanel("directionspanel");
+				} else {
+					alert("Directions query failed: " + status);
+				}
+			});
+		}
+    
+		// Draw the array of boxes as polylines on the map
+		function drawBoxes(boxes) {
+			boxpolys = new Array(boxes.length);
+			for (var i = 0; i < boxes.length; i++) {
+				boxpolys[i] = new google.maps.Rectangle({
+					bounds: boxes[i],
+					fillOpacity: 0,
+					strokeOpacity: 1.0,
+					strokeColor: '#000000',
+					strokeWeight: 1,
+					map: map
+				});
+			}
+		}
+		
+		function search_boxes(boxes) {
+			if(hasactivecategories()) {
+				for (var j = 0; j < activecategories.length; j++) {
+					for (var i = 0; i < boxes.length; i++) {
+						var bounds = boxes[i];
+						// Places request
+						var place_request = {
+							bounds: bounds,
+							types: [getActiveCategories(j)]
+						}
+						infowindow = new google.maps.InfoWindow();
+						service = new google.maps.places.PlacesService(map);
+						service.search(place_request, callback);
+					}
+				}
+			}
+			else if(usingName && hasactivenames()) {
+				for (var j = 0; j < activenames.length; j++) {
+					for (var i = 0; i < boxes.length; i++) {
+						var bounds = boxes[i];
+						// Places request
+						var place_request = {
+							bounds: bounds,
+							name: getActiveNames(j)
+						}
+						infowindow = new google.maps.InfoWindow();
+						service = new google.maps.places.PlacesService(map);
+						service.search(place_request, callback);
+					}
+				}
+			}
+			else {
+				for (var i = 0; i < boxes.length; i++) {
+					var bounds = boxes[i];
+					// Places request
+					var place_request = {
+						bounds: bounds
+					}
+					infowindow = new google.maps.InfoWindow();
+					service = new google.maps.places.PlacesService(map);
+					service.search(place_request, callback);
+				}
+			}
+		}
+		
+		function callback(results, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				//for (var i = 0; i < results.length; i++) {
+				var i = 0;
+				
+				while(i < results.length) {
+					createMarker(results[i]);
+					var request = { reference: results[i].reference };
+					service.getDetails(request, function(details, status2) {
+						//if(status2 == google.maps.places.PlacesServiceStatus.OK)
+							addResult(details);
+					});
+					i++;
+				}
+				
+				// Assume that markers were created okay.
+				// Let's show off the results tab since that is probably
+				// what you're looking for anyway.
+				showpanel("resultspanel");
+				// Unlock the results tab
+				$("#resultsbutton").removeClass("disabled");
+			}
+		}
+
+
+		// Clear boxes currently on the map
+		function clearBoxes() {
+			if (boxpolys != null) {
+				for (var i = 0; i < boxpolys.length; i++) {
+					boxpolys[i].setMap(null);
+				}
+			}
+			boxpolys = null;
+		}
+		
+		// First run this function
+		function initialize() {
+			// Sets the map, sidebar sizes, and shadow divs
+			setMapSize();
+			
+			// Set the initial map options
+			var myOptions = {
+				center: new google.maps.LatLng(37.063712,-95.573603),
+				zoom: 4,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				mapTypeControl: false
+			};
+			
+			// Create the map on map_canvas
+			map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+			
+			directionsDisplay = new google.maps.DirectionsRenderer();
+			directionsDisplay.setMap(map);
+			directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+
+			// the geocoder object allows us to do latlng lookup based on address
+			geocoder = new google.maps.Geocoder();
+			
+			var input = document.getElementById('start');
+			var input2 = document.getElementById('end');
+			autocomplete = new google.maps.places.Autocomplete(input);
+			autocomplete2 = new google.maps.places.Autocomplete(input2);
+		}
+		
+		function createMarker(place) {
+			var marker = new google.maps.Marker({
+				map: map,
+				position: place.geometry.location,
+				animation: google.maps.Animation.DROP
+			});
+			marker.myID = markerID;
+			
+			markersArray.push(marker);
+
+			google.maps.event.addListener(marker, 'click', function() {
+				if (infowindow) infowindow.close();
+				var html = "";
+				
+				geocoder.geocode({'latLng': place.geometry.location}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						html = "<div class='infowindow'>";
+						html += "<div class='resultname'>";
+						if(place.website != null && place.name != null)
+							html += "<a target='_new' class='' href='"+place.website+"'>"+place.name+"</a>";
+						else if(place.name != null)
+							html += "<span style='font-size: 120%; font-weight: bold;'>"+place.name+"</span>";
+						html += "</div>";
+						
+						var addr1 = ""; // Street Addr
+						var addr2 = ""; // City, State, Country
+						if (results[0]) {
+							var addr = results[0].formatted_address;
+							addr1 = addr.substring(0, addr.indexOf(", "));
+							addr2 = addr.substring(addr.indexOf(", ")+2); }
+						if (!results[0] && results[1]) {
+							addr1 = results[1].formatted_address; }
+										
+						if(addr1 != "")
+							html += "<div class='resultaddress'>"+addr1+"<br />"+addr2+"</div>";
+						else
+							html += "<div class='resultaddress'>"+addr2+"</div>";
+						if(place.formatted_phone_number != null)
+							html += "<div class='resultphone'>"+place.formatted_phone_number+"</div>";
+						//if(place.rating != null)
+							//html += "<div class='resultrating'>"+place.rating+"</div>";
+						if($("#start").val() != "")
+							html += "<div class='resultdirection'><a href='javascript:routeNoBox(\""+results[0].formatted_address+"\");' class='resultdirlink'>Get Directions To Here</a></div>";
+						html += "</div>";
+						
+						infowindow.setContent(html);
+					} else {
+						alert("Geocoder failed due to: " + status);
+					}
+				});
+				
+				infowindow.open(map, this);
+			});
+		}
+		
+		// When the window is resized, run the map resizer again.
+		$(window).resize(function() {
+			setMapSize();
+		});
+		
+		// When the DOM is loaded, run the initializer function
+		$(document).ready(function() {
+			initialize();
+			
+			// Initialize Slider
+			$("#slider-range").slider({
+				range: "min",
+				min: 0,
+				max: 25,
+				value: 1,
+				slide: function(event, ui) {
+					$("#amount").html(ui.value+" mi");
+					if(bothset())
+						route();
+				}
+			});
+			// Set the slider on the page
+			$("#amount").html($("#slider-range").slider("value")+" mi");
+		
+			google.maps.event.addListener(autocomplete, 'place_changed', function() {
+				startSet = true;
+				
+				var place = autocomplete.getPlace();
+				if (place.geometry.viewport) {
+					map.fitBounds(place.geometry.viewport);
+				} else {
+					map.setCenter(place.geometry.location);
+					map.setZoom(17);
+				}
+				
+				createMarker(place);
+				
+				infowindow.setContent(place.name);
+				infowindow.open(map, marker);
+			});
+		
+			google.maps.event.addListener(autocomplete2, 'place_changed', function() {
+				endSet = true;
+				if(bothset) { clearOverlays(); route(); }
+				else {
+					var place = autocomplete2.getPlace();
+					if (place.geometry.viewport) {
+						map.fitBounds(place.geometry.viewport);
+					} else {
+						map.setCenter(place.geometry.location);
+						map.setZoom(17);
+					}
+					
+					createMarker(place);
+					
+					infowindow.setContent(place.name);
+					infowindow.open(map, marker);
+				}
+			});
+			
+			$("#searchbutton").click(function() {
+				if($("#searchbutton").hasClass("disabled")) { }
+				else
+					showpanel("searchpanel");
+			});
+			
+			$("#directionsbutton").click(function() {
+				if($("#directionsbutton").hasClass("disabled")) { }
+				else
+					showpanel("directionspanel");
+			});
+			
+			$("#resultsbutton").click(function() {
+				if($("#resultsbutton").hasClass("disabled")) { }
+				else
+					showpanel("resultspanel");
+			});
+			
+			$("#bycategorybutton").click(function() {
+				if(!$("#categoryblock").is(":visible")) {
+					$("#placenameblock").hide();
+					$("#categoryblock").fadeIn(500);
+				}
+				usingName = false;
+			});
+			
+			$("#bynamebutton").click(function() {
+				if(!$("#placenameblock").is(":visible")) {
+					$("#categoryblock").hide();
+					$("#placenameblock").fadeIn(500);
+				}
+				usingName = true;
+			});
+			
+			$("#placename").keyup(function(event){
+				if(event.keyCode == 13){
+					addActiveName($("#placename").val());
+					$("#placename").val("");
+				}
+				if(event.keyCode == 222){
+					$("#placename").val($("#placename").val().substring(0, $("#placename").val().length - 1));
+					$(".warning").html("Apostraphes are not yet supported.");
+					$(".warning").fadeIn(500, function() {
+						setTimeout(function() {
+							$(".warning").fadeOut(500);
+						}, 1200);
+					});
+				}
+			});
+			
+			$('#category').jsonSuggest({data: catListJSON, maxHeight: 150, width: 266, onSelect: addActiveCategory});
+		});
+		
+		function deleteicon() {
+			removeActiveCategory(getIDByValue($(this).next(".deletecat").html()));
+		}
+		
+		function namedeleteicon() {
+			removeActiveName($(this).next(".deletename").html());
+		}
+		
+		function getIDByValue(val) {
+			return val.toLowerCase().replace(" ", "_");
+		}
+		
+		function bothset() {
+			if(startSet && endSet)
+				return true;
+			return false;
+		}
+		
+		function clearOverlays() {
+		  if (markersArray) {
+			for (var i = 0; i < markersArray.length; i++ ) {
+			  markersArray[i].setMap(null);
+			}
+		  }
+		}
+		
+		function showpanel(panel) {
+			$("#searchpanel").hide();
+			$("#directionspanel").hide();
+			$("#resultspanel").hide();
+			$("#"+panel).fadeIn(500);
+		}
+		
+		function hasactivecategories() {
+			if(activecategories.length > 0)
+				return true;
+			return false;
+		}
+		
+		function getActiveCategories(j) {
+			return activecategories[j];
+		}
+		
+		function hasactivenames() {
+			if(activenames.length > 0)
+				return true;
+			return false;
+		}
+		
+		function getActiveNames(j) {
+			return activenames[j];
+		}
+		
+		function clearResults() {
+			$("#resultspanel").html("");
+		}
+		
+		function addResult(place) {
+			if(place != null) {
+				var html = "<div class='result'>";
+				html += "<div class='resultname'>";
+				if(place.website != null && place.name != null)
+					html += "<a target='_new' class='' href='"+place.website+"'>"+place.name+"</a>";
+				else if(place.name != null)
+					html += place.name;
+				html += "</div>";
+				if(place.formatted_address != null)
+					html += "<div class='resultaddress'>"+place.formatted_address+"</div>";
+				if(place.formatted_phone_number != null)
+					html += "<div class='resultphone'>"+place.formatted_phone_number+"</div>";
+				if(place.rating != null)
+					html += "<div class='resultrating'>"+place.rating+"</div>";
+				html += "</div>";
+				$("#resultspanel").append(html);
+			}
+		}
+		
+		var catList = [
+			{	id: 'accounting',
+				text: 'Accounting' },
+			{	id: 'airport',
+				text: 'Airport' },
+			{	id: 'amusement_park',
+				text: 'Amusement Park' },
+			{	id: 'aquarium',
+				text: 'Aquarium' },
+			{	id: 'art_gallery',
+				text: 'Art Gallery' },
+			{	id: 'atm',
+				text: 'ATM' },
+			{	id: 'bakery',
+				text: 'Bakery' },
+			{	id: 'bank',
+				text: 'Bank' },
+			{	id: 'bar',
+				text: 'Bar' },
+			{	id: 'beauty_salon',
+				text: 'Beauty Salon' },
+			{	id: 'bicycle_store',
+				text: 'Bicycle Store' },
+			{	id: 'bowling_alley',
+				text: 'Bowling Alley' },
+			{	id: 'bus_station',
+				text: 'Bus Station' },
+			{	id: 'cafe',
+				text: 'Cafe' },
+			{	id: 'campground',
+				text: 'Campground' },
+			{	id: 'car_dealer',
+				text: 'Car Delear' },
+			{	id: 'car_rental',
+				text: 'Car Rental' },
+			{	id: 'car_wash',
+				text: 'Car Wash' },
+			{	id: 'casino',
+				text: 'Casino' },
+			{	id: 'cemetery',
+				text: 'Cemetery' },
+			{	id: 'church',
+				text: 'Church' },
+			{	id: 'city_hall',
+				text: 'City Hall' },
+			{	id: 'clothing_store',
+				text: 'Clothing Store' },
+			{	id: 'convenience_store',
+				text: 'Convenience Store' },
+			{	id: 'courthouse',
+				text: 'Courthouse' },
+			{	id: 'dentist',
+				text: 'Dentist' },
+			{	id: 'department_store',
+				text: 'Department Store' },
+			{	id: 'doctor',
+				text: 'Doctor' },
+			{	id: 'electrician',
+				text: 'Electrician' },
+			{	id: 'electronics_store',
+				text: 'Electronics Store' },
+			{	id: 'embassy',
+				text: 'Embassy' },
+			{	id: 'establishment',
+				text: 'Establishment' },
+			{	id: 'finance',
+				text: 'Finance' },
+			{	id: 'fire_station',
+				text: 'Fire Station' },
+			{	id: 'florist',
+				text: 'Florist' },
+			{	id: 'food',
+				text: 'Food' },
+			{	id: 'funeral_home',
+				text: 'Funeral Home' },
+			{	id: 'furniture_store',
+				text: 'Furniture Store' },
+			{	id: 'gas_station',
+				text: 'Gas Station' },
+			{	id: 'general_contractor',
+				text: 'General Contractor' },
+			{	id: 'grocery_or_supermarket',
+				text: 'Grocery or Supermarket' },
+			{	id: 'gym',
+				text: 'Gym' },
+			{	id: 'hair_care',
+				text: 'Hair Care' },
+			{	id: 'hardware_store',
+				text: 'Hardware Store' },
+			{	id: 'health',
+				text: 'Health' },
+			{	id: 'hindu_temple',
+				text: 'Hindu Temple' },
+			{	id: 'home_goods_store',
+				text: 'Home Goods Store' },
+			{	id: 'hospital',
+				text: 'Hospital' },
+			{	id: 'insurance_agency',
+				text: 'Insurance Agency' },
+			{	id: 'jewelry_store',
+				text: 'Jewelry Store' },
+			{	id: 'laundry',
+				text: 'Laundry' },
+			{	id: 'lawery',
+				text: 'Lawyer' },
+			{	id: 'library',
+				text: 'Library' },
+			{	id: 'liquor_store',
+				text: 'Liquor Store' },
+			{	id: 'local_government_office',
+				text: 'Local Government Office' },
+			{	id: 'locksmith',
+				text: 'Locksmith' },
+			{	id: 'lodging',
+				text: 'Lodging' },
+			{	id: 'meal_delivery',
+				text: 'Meal Delivery' },
+			{	id: 'meal_takeaway',
+				text: 'Meal Takeaway' },
+			{	id: 'mosque',
+				text: 'Mosque' },
+			{	id: 'movie_rental',
+				text: 'Movie Rental' },
+			{	id: 'movie_theater',
+				text: 'Movie Theater' },
+			{	id: 'moving_company',
+				text: 'Moving Company' },
+			{	id: 'museum',
+				text: 'Museum' },
+			{	id: 'night_club',
+				text: 'Night Club' },
+			{	id: 'painter',
+				text: 'Painter' },
+			{	id: 'park',
+				text: 'Park' },
+			{	id: 'parking',
+				text: 'Parking' },
+			{	id: 'pet_store',
+				text: 'Pet Store' },
+			{	id: 'pharmacy',
+				text: 'Pharmacy' },
+			{	id: 'physiotherapist',
+				text: 'Physiotherapist' },
+			{	id: 'place_of_worship',
+				text: 'Place of Worship' },
+			{	id: 'plumber',
+				text: 'Plumber' },
+			{	id: 'police',
+				text: 'Police' },
+			{	id: 'post_office',
+				text: 'Post Office' },
+			{	id: 'real_estate_agency',
+				text: 'Real Estate Agency' },
+			{	id: 'restaurant',
+				text: 'Restaurant' },
+			{	id: 'roofing_contractor',
+				text: 'Roofing Contractor' },
+			{	id: 'rv_park',
+				text: 'RV Park' },
+			{	id: 'school',
+				text: 'School' },
+			{	id: 'shoe_store',
+				text: 'Shoe Store' },
+			{	id: 'shopping_mall',
+				text: 'Shopping Mall' },
+			{	id: 'spa',
+				text: 'Spa' },
+			{	id: 'stadium',
+				text: 'Stadium' },
+			{	id: 'storage',
+				text: 'Storage' },
+			{	id: 'store',
+				text: 'Store' },
+			{	id: 'subway_station',
+				text: 'Subway Station' },
+			{	id: 'synagogue',
+				text: 'Synagogue' },
+			{	id: 'taxi_stand',
+				text: 'Taxi Stand' },
+			{	id: 'train_station',
+				text: 'Train Station' },
+			{	id: 'travel_agency',
+				text: 'Travel Agency' },
+			{	id: 'university',
+				text: 'University' },
+			{	id: 'veterinary_care',
+				text: 'Veterinary Care' },
+			{	id: 'zoo',
+				text: 'Zoo' }];
+			
+		// JSON string of the above object, just as an example
+		var catListJSON = JSON.stringify(catList);
+		
+		function addActiveCategory(catID) {
+			if(activecategories.length < 1) { $("#activecats").html(""); }
+			var html = "<div id='cat_"+catID.id+"'>";
+				html += "<img class='deleteicon' src='img/delete.png' onclick='javascript:removeActiveCategory(\""+catID.id+"\")' /><span class='deletecat'>"+catID.text+"</span>";
+				html += "</div>";
+			$("#activecats").prepend(html);
+			$("#category").val("");
+			activecategories.push(catID.id);
+			if(bothset())
+				route();
+		}
+		
+		function removeActiveCategory(catID) {
+			$("#activecats").find("#cat_"+catID).fadeOut(500, function() {
+				$("#activecats").find("#cat_"+catID).remove();
+			});
+			var idx = activecategories.indexOf(catID);
+			if(idx!=-1) activecategories.splice(idx, 1);
+			if(bothset())
+				route();
+			var html = "<div id='cat_all'>";
+				html += "<span class='deletecat'>All Categories</span>";
+				html += "</div>";
+			if(activecategories.length < 1) {
+				$("#activecats").html(html);
+			}
+		}
+		
+		function removeAllActiveCategories() {
+			activecategories = [];
+			var html = "<div id='cat_all'>";
+				html += "<span class='deletecat'>All Categories</span>";
+				html += "</div>";
+			$("#activecats").html(html);
+		}
+		
+		function addActiveName(placeName) {
+			if(activenames.length < 1) { $("#activenames").html(""); }
+			var html = "<div id='name_"+placeName+"'>";
+				html += "<img class='namedeleteicon' src='img/delete.png' onclick='javascript:removeActiveName(\""+placeName+"\")' /><span class='deletenames'>"+placeName+"</span>";
+				html += "</div>";
+			$("#activenames").prepend(html);
+			$("#placename").val("");
+			activenames.push(placeName);
+			if(bothset())
+				route();
+		}
+		
+		function removeActiveName(placeName) {
+			$("#activenames").find("#name_"+placeName).fadeOut(500, function() {
+				$("#activenames").find("#name_"+placeName).remove();
+			});
+			var idx = activenames.indexOf(placeName);
+			if(idx!=-1) activenames.splice(idx, 1);
+			if(bothset())
+				route();
+			if(activenames.length < 1) {
+				var html = "<div id='name_all'>";
+					html += "<span class='deletename'>All Places</span>";
+					html += "</div>";
+				$("#activenames").html(html);
+			}
+		}
+		
+		function removeAllActiveNames() {
+			activenames = [];
+			var html = "<div id='name_all'>";
+				html += "<span class='deletename'>All Places</span>";
+				html += "</div>";
+			$("#activenames").html(html);
+		}
+    </script>
+</body>
+</html>

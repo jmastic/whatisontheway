@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="css/buttons.css" />
+    <style type="text/css">
+		html { height: 100% }
+		body { height: 100%; margin: 0; padding: 0; font-family: Tahoma, Arial, sans-serif; }
+		#heading { width: 100%; background: #e7e7e7; padding-top: 10px; height: 30px; }
+		#logo { padding-left: 25px; margin-right: 100px; }
+		#heading input { width: 50%; margin-left: 100; position: relative; top: -5px; }
+		#left { float: left; width: 20%; -moz-box-shadow: 10px 10px 5px #888; -webkit-box-shadow: 10px 10px 5px #888; box-shadow: 10px 10px 5px #888; }
+		#map_canvas { position: absolute; right: 0px; width: 100%; }
+    </style>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAXAuCJXuhp_qjuk83VOKPQWc7y1GoTTQU&sensor=false&libraries=places"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+	<script type="text/javascript">
+		function setMapSize(center) {
+			var containerHeight = $(window).height();
+			$("#map_canvas").height(containerHeight - 40);
+			$("#sliderbox").height(containerHeight - 40);
+		}
+		
+		function boxHeight() {
+			return $("#map_canvas").height()+"px";
+		}
+		
+		function getDimensionByPercent(percent) {
+			return $(window).width() * (percent / 100);
+		}
+		
+		var map;
+
+		function SliderBox(controlDiv, map) {
+			var control = this;
+			control.isOpen = true;
+
+			var box = document.createElement('div');
+			box.id = 'sliderbox';
+			box.style.height = boxHeight();
+			box.style.width = getDimensionByPercent(25)+'px';
+			box.style.backgroundColor = 'white';
+			box.style.position = 'relative';
+			controlDiv.appendChild(box);   
+
+			var toggleBtn = document.createElement('input');
+			toggleBtn.id = 'toggleBtn';
+			toggleBtn.type = 'button';
+			toggleBtn.value = 'Close';
+			box.appendChild(toggleBtn);
+
+			$('#toggleBtn').live('click', function() {
+				if (control.isOpen) {
+					$("#sliderbox").animate({
+						"marginLeft": "-="+$(window).width()*.25+"px"
+					}, {
+						duration: 500,
+						step: function() {
+							google.maps.event.trigger(map, 'resize');
+						}
+					});
+					control.isOpen = false;
+					toggleBtn.value = 'Open';
+				} else {
+					$("#sliderbox").animate({
+						"marginLeft": "+=150px"
+					}, {
+						duration: 500,
+						step: function() {
+							google.maps.event.trigger(map, 'resize');
+						}
+					});
+					control.isOpen = true;
+					toggleBtn.value = 'Close';
+				};
+			});
+		}
+		
+		function initialize() {
+			setMapSize();
+			
+			var myOptions = {
+				center: new google.maps.LatLng(37.063712,-110.573603),
+				zoom: 4,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				mapTypeControl: false
+			};
+			
+			map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+
+			var sliderBoxDiv = document.createElement('div');
+			var sliderBoxControl = new SliderBox(sliderBoxDiv, map);
+
+			sliderBoxDiv.index = -500;
+			map.controls[google.maps.ControlPosition.TOP_LEFT].push(sliderBoxDiv);
+		}
+		
+		$(window).resize(function() {
+			setMapSize();
+		});
+		
+		$(document).ready(function() {
+			initialize();
+		});
+    </script>
+</head>
+<body>
+	<div id="heading">
+		<span id="logo"><img src="img/logo.png" /></span><input type="text" value="" id="start" />
+	</div>
+	<!--
+		<a href="#" class="button" title="Restaurant"><img src="img/food.png" /></a>
+		<a href="#" class="button" title="Gas Station"><img src="img/gas.png" /></a>
+		<a href="#" class="button" title="Parking"><img src="img/parking.png" /></a>
+	</div>
+	<div id="left" style="width: 25%; height: 100%;"></div>-->
+	<div id="map_canvas" style="width:100%; height:100%;"></div>
+</body>
+</html>
