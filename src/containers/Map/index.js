@@ -1,47 +1,19 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Script from 'react-load-script';
-import './index.css';
+import GMap from '../../components/Map';
 
 class Map extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      center: null
-    };
-  }
-
-  componentDidMount() {
-    this.loadMap();
-  }
-
-  componentDidUnMount() {
-    // google.maps.event.clearListeners(map, 'click');
-  }
-
-  loadMap() {
-    const {config} = this.props;
-    this.setState({
-      center: config.initialCenter
-    });
-    this.map = this.createMap(config.initialCenter);
-  }
-
-  createMap(center) {
-    const {config} = this.props;
-    const mapOptions = {
-      zoom: config.initialZoom,
-      center: center
-    }
-    return new window.google.maps.Map(this.refs.mapCanvas, mapOptions);
-  }
-
   render() {
     return (
-      <div className="google-map">
-        <div className="google-map-canvas" ref="mapCanvas"></div>
-      </div>
-    );
+      <GMap
+        mapConfig={this.props.config}
+        directions={this.props.directions}
+        isMarkerShown
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&v=3.exp&libraries=geometry,drawing,places`}
+        loadingElement={<div style={{ height: `100%`, width: `100%` }} />}
+        containerElement={<div style={{ height: `100%`, width: `100%` }} />}
+        mapElement={<div style={{ height: `100%`, width: `100%` }} />}
+      />
+    )
   }
 }
 

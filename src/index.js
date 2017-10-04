@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './containers/App/App';
+import App from './containers/App';
 import registerServiceWorker from './registerServiceWorker';
 require('dotenv').config();
 
@@ -18,5 +18,5 @@ render(App);
 registerServiceWorker();
 
 if (module.hot) {
-  module.hot.accept('./containers/App/App', () => render(App));
+  module.hot.accept('./containers/App/index', () => render(App));
 }

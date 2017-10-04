@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import PlacesAutocomplete from 'react-places-autocomplete'
+import './index.css'
 
 class Autocomplete extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    console.log('render ac', this.props);
     const inputProps = {
       value: this.props.address,
-      onChange: () => { },
+      onChange: this.props.onChange,
+      placeholder: this.props.placeholder,
+      onBlur: this.props.onBlur,
+      type: this.props.type,
+      autoFocus: this.props.autoFocus
     }
 
     return (
