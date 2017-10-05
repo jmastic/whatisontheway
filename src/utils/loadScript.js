@@ -19,3 +19,5 @@ const loadScript = (url) => {
 
   return scriptPromise;
 }
+
+export default loadScript;
