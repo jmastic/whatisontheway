@@ -1,4 +1,4 @@
-import { loadScript } from './loadScript';
+import loadScript from './loadScript';
 
 const getPath = (origin, destination) => {
   return new Promise((resolve, reject) => {
@@ -19,15 +19,54 @@ const getPath = (origin, destination) => {
   });
 }
 
-function searchRouteBox(origin, destination) {
-  getPath(origin, destination)
-    .then((path) => {
-      loadScript('/routeBoxer.min.js')
-        .then((script) => {
-          const routeBoxer = new RouteBoxer();
-          console.log(routeBoxer);
+const searchBoxes = (path, map) => {
+  return new Promise((resolve, reject) => {
+    const routeBoxer = new window.RouteBoxer();
+    // Cover only .5 mile radius for now
+    const boxes = routeBoxer.box(path, .8);
+
+    let places = [];
+    let boxPromises = [];
+
+    boxes.forEach((bounds) => {
+      boxPromises.push(new Promise((resolveBox, rejectBox) => {
+        const placeRequest = {
+          bounds: bounds
+        };
+        const service = new window.google.maps.places.PlacesService(map);
+        service.search(placeRequest, (results, status) => {
+          if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
+            return rejectBox(results);
+          }
+
+          // Limit our results to 3 places for each box
+          results = results.slice(0, 3);
+
+          places = places.concat(results);
+          return resolveBox(results);
         })
+      }));
     })
+
+    Promise.all(boxPromises)
+      .then(() => { console.log(places); resolve(places); })
+      .catch(() => { reject(places) })
+  });
+}
+
+const searchRouteBox = (origin, destination, mapRef) => {
+  return new Promise((resolve, reject) => {
+    getPath(origin, destination)
+      .then((path) => {
+        loadScript('/routeBoxer.min.js')
+          .then(() => {
+            const map = mapRef.context[Object.keys(mapRef.context)[0]]
+            searchBoxes(path, map)
+              .then((places) => resolve(places))
+              .catch((error) => reject(error));
+          })
+      })
+  });
 }
 
 export default searchRouteBox;
