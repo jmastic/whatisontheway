@@ -25,22 +25,26 @@ const searchBoxes = (path, map) => {
     // Cover only .5 mile radius for now
     const boxes = routeBoxer.box(path, .8);
 
+    // Save the boxes so we can draw them later
+    window.boxes = boxes;
+
     let places = [];
     let boxPromises = [];
 
     boxes.forEach((bounds) => {
       boxPromises.push(new Promise((resolveBox, rejectBox) => {
         const placeRequest = {
-          bounds: bounds
+          bounds: bounds,
+          // type: ['pet_store'],
+          query: `pet store`,
+          rankBy: window.google.maps.places.RankBy.PROMINENCE
         };
         const service = new window.google.maps.places.PlacesService(map);
-        service.search(placeRequest, (results, status) => {
+        service.textSearch(placeRequest, (results, status) => {
+        // service.nearbySearch(placeRequest, (results, status) => {
           if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
             return rejectBox(results);
           }
-
-          // Limit our results to 3 places for each box
-          results = results.slice(0, 3);
 
           places = places.concat(results);
           return resolveBox(results);
@@ -49,8 +53,8 @@ const searchBoxes = (path, map) => {
     })
 
     Promise.all(boxPromises)
-      .then(() => { console.log(places); resolve(places); })
-      .catch(() => { reject(places) })
+      .then(() => { resolve(places); })
+      .catch(() => { resolve(places) })
   });
 }
 

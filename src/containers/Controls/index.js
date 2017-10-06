@@ -7,8 +7,8 @@ class Controls extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startLocation: '',
-      endLocation: ''
+      startLocation: '18342 E Saskatoon Pl, Parker, CO, United States',
+      endLocation: 'Park Meadows Drive, Lone Tree, CO, United States'
     };
   }
 
