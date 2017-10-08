@@ -1,0 +1,11 @@
+#PlacesAutocomplete__autocomplete-container {
+  z-index: 2;
+}
+
+#PlacesAutocomplete__root input {
+  box-sizing: border-box;
+  border: none;
+  -webkit-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.23);
+  -moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.23);
+  box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.23);
+}
