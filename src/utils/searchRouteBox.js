@@ -23,7 +23,7 @@ const searchBoxes = (path, map) => {
   return new Promise((resolve, reject) => {
     const routeBoxer = new window.RouteBoxer();
     // Cover only .5 mile radius for now
-    const boxes = routeBoxer.box(path, .8);
+    const boxes = routeBoxer.box(path, 1.6);
 
     // Save the boxes so we can draw them later
     window.boxes = boxes;
@@ -35,13 +35,14 @@ const searchBoxes = (path, map) => {
       boxPromises.push(new Promise((resolveBox, rejectBox) => {
         const placeRequest = {
           bounds: bounds,
-          // type: ['pet_store'],
-          query: `pet store`,
-          rankBy: window.google.maps.places.RankBy.PROMINENCE
+          type: ['pet_store'],
+          // keyword: `pet`,
+          // query: `pet store`,
+          // rankBy: window.google.maps.places.RankBy.PROMINENCE
         };
         const service = new window.google.maps.places.PlacesService(map);
-        service.textSearch(placeRequest, (results, status) => {
-        // service.nearbySearch(placeRequest, (results, status) => {
+        // service.textSearch(placeRequest, (results, status) => {
+        service.nearbySearch(placeRequest, (results, status) => {
           if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
             return rejectBox(results);
           }
