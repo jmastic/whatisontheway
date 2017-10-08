@@ -6,16 +6,59 @@ import './index.css'
 class Controls extends Component {
   constructor(props) {
     super(props);
+    // Default state for the controls. Should have
+    // start + end locations, and the type of place to look for
     this.state = {
       startLocation: '18342 E Saskatoon Pl, Parker, CO, United States',
-      endLocation: 'Park Meadows Drive, Lone Tree, CO, United States'
+      endLocation: 'Park Meadows Drive, Lone Tree, CO, United States',
+      poiType: 'pet_store'
     };
   }
 
+  // Geocode an address (string).
+  geocodeAddress(address) {
+    return new Promise((resolve, reject) => {
+      if (!address) {
+        return reject('Address not provided');
+      }
+
+      geocodeByAddress(address)
+        .then((results) => getLatLng(results[0]))
+        .then((latLng) => resolve(latLng))
+        .catch((error) => reject(error));
+    });
+  }
+
+  // When the start location has changed
+  handleStartLocationChange(location) {
+    this.setState({
+      startLocation: location
+    });
+  }
+
+  // When the end location has changed
+  handleEndLocationChange(location) {
+    this.setState({
+      endLocation: location
+    })
+  }
+
+  // When the focus has shifted off of one of the Autocomplete components
+  handleAutocompleteBlur() {
+    // Make sure we have both locations set
+    if (!this.state.startLocation || !this.state.endLocation) {
+      return;
+    }
+
+    // So both locations are set. Send them up to the parent container
+    // where they can be geocoded and displayed as markers.
+    if (typeof this.displayOnMap === 'function') {
+      this.displayOnMap(this.state);
+    }
+  }
+
   setDirections() {
-    if (!this.state.startLocation ||
-      !this.state.endLocation
-    ) {
+    if (!this.state.startLocation || !this.state.endLocation) {
       return;
     }
 
@@ -41,18 +84,6 @@ class Controls extends Component {
       });
   }
 
-  handleStartLocationChange = (location) => {
-    this.setState({
-      startLocation: location
-    })
-  }
-
-  handleEndLocationChange = (location) => {
-    this.setState({
-      endLocation: location
-    })
-  }
-
   render() {
     return (
       <div id="Controls">
@@ -61,7 +92,7 @@ class Controls extends Component {
           onChange={this.handleStartLocationChange}
           autoFocus={true}
           type={"search"}
-          onBlur={this.setDirections.bind(this)}
+          onBlur={this.handleAutocompleteBlur.bind(this)}
           placeholder={"Start Location"}
         />
         <Autocomplete
@@ -69,7 +100,7 @@ class Controls extends Component {
            onChange={this.handleEndLocationChange}
            autoFocus={false}
            type={"search"}
-           onBlur={this.setDirections.bind(this)}
+           onBlur={this.handleAutocompleteBlur.bind(this)}
            placeholder={"End Location"}
         />
       </div>

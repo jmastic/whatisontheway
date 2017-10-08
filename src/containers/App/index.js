@@ -4,6 +4,7 @@ import Controls from '../Controls';
 import PropTypes from 'prop-types';
 import Script from 'react-load-script';
 import searchRouteBox from '../../utils/searchRouteBox';
+import LoadingMessage from '../../components/Loading';
 import './index.css';
 
 class App extends Component {
@@ -33,6 +34,9 @@ class App extends Component {
     }
   }
 
+  // We are setting this handler so that the ">" key
+  // can be used to turn on + off the drawing of route boxes.
+  // It's kind of neat to look at.
   handleKeyPress(event) {
     if (event.keyCode === 190 && event.shiftKey) {
       this.setState({
@@ -41,27 +45,25 @@ class App extends Component {
     }
   }
 
+  // When the Google API script has been created on the DOM
   handleScriptCreate() {
     this.setState({
       googleApiLoaded: false
     });
   }
 
+  // When the Google API script loading caused an error
   handleScriptError() {
     this.setState({
       googleApiError: true
     });
   }
 
+  // When the Google API script has finished loading
   handleScriptLoad() {
     this.setState({
       googleApiLoaded: true
     });
-  }
-
-  onMapMounted(mapRef) {
-    this.mapRef = mapRef;
-    window.map = this.mapRef;
   }
 
   // Given an origin and a destination, build the
@@ -87,6 +89,7 @@ class App extends Component {
     let content;
     if (this.state.googleApiLoaded) {
       content = <div className="full-size" onKeyDown={this.handleKeyPress.bind(this)}>
+        <LoadingMessage />
         <Controls
           setDirections={this.setDirections.bind(this)}
         />
@@ -95,7 +98,6 @@ class App extends Component {
           markers={this.state.markers}
           drawBoxes={this.state.drawBoxes}
           config={this.mapSettings}
-          onMapMounted={this.onMapMounted.bind(this)}
         />
       </div>;
     } else {
