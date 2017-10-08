@@ -5,7 +5,7 @@ import './index.css'
 // Loading SVG from https://github.com/SamHerbert/SVG-Loaders
 class LoadingMessage extends Component {
   render() {
-    return (
+    const content = this.props.show ?
       <div className="loading full-size">
         <div className="loading-container">
           <img
@@ -14,7 +14,8 @@ class LoadingMessage extends Component {
           />
         </div>
       </div>
-    )
+      : <div></div>
+    return content;
   }
 }
 

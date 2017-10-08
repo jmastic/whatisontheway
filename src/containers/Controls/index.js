@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Autocomplete from '../../components/Autocomplete';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import './index.css'
 
 class Controls extends Component {
@@ -15,20 +14,6 @@ class Controls extends Component {
     };
   }
 
-  // Geocode an address (string).
-  geocodeAddress(address) {
-    return new Promise((resolve, reject) => {
-      if (!address) {
-        return reject('Address not provided');
-      }
-
-      geocodeByAddress(address)
-        .then((results) => getLatLng(results[0]))
-        .then((latLng) => resolve(latLng))
-        .catch((error) => reject(error));
-    });
-  }
-
   // When the start location has changed
   handleStartLocationChange(location) {
     this.setState({
@@ -40,11 +25,12 @@ class Controls extends Component {
   handleEndLocationChange(location) {
     this.setState({
       endLocation: location
-    })
+    });
   }
 
   // When the focus has shifted off of one of the Autocomplete components
   handleAutocompleteBlur() {
+    console.log('[Controls] Autocomplete was triggered');
     // Make sure we have both locations set
     if (!this.state.startLocation || !this.state.endLocation) {
       return;
@@ -52,36 +38,9 @@ class Controls extends Component {
 
     // So both locations are set. Send them up to the parent container
     // where they can be geocoded and displayed as markers.
-    if (typeof this.displayOnMap === 'function') {
-      this.displayOnMap(this.state);
+    if (typeof this.props.onPlacesChange === 'function') {
+      this.props.onPlacesChange(this.state);
     }
-  }
-
-  setDirections() {
-    if (!this.state.startLocation || !this.state.endLocation) {
-      return;
-    }
-
-    const startLocationGeocode = new Promise((resolve, reject) => {
-      geocodeByAddress(this.state.startLocation)
-        .then(results => getLatLng(results[0]))
-        .then(latLng => resolve({ o: latLng }))
-        .catch(error => reject(error))
-    });
-
-    const endLocationGeocode = new Promise((resolve, reject) => {
-      geocodeByAddress(this.state.endLocation)
-        .then(results => getLatLng(results[0]))
-        .then(latLng => resolve({ d: latLng }))
-        .catch(error => reject(error))
-    });
-
-    Promise.all([startLocationGeocode, endLocationGeocode])
-      .then((values) => {
-        const origin = values[0].o || values[1].o;
-        const destination = values[0].d || values[1].d;
-        this.props.setDirections(origin, destination);
-      });
   }
 
   render() {
@@ -89,7 +48,7 @@ class Controls extends Component {
       <div id="Controls">
         <Autocomplete
           address={this.state.startLocation}
-          onChange={this.handleStartLocationChange}
+          onChange={this.handleStartLocationChange.bind(this)}
           autoFocus={true}
           type={"search"}
           onBlur={this.handleAutocompleteBlur.bind(this)}
@@ -97,7 +56,7 @@ class Controls extends Component {
         />
         <Autocomplete
            address={this.state.endLocation}
-           onChange={this.handleEndLocationChange}
+           onChange={this.handleEndLocationChange.bind(this)}
            autoFocus={false}
            type={"search"}
            onBlur={this.handleAutocompleteBlur.bind(this)}
