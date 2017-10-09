@@ -3,10 +3,10 @@ import {
   withGoogleMap,
   GoogleMap,
   DirectionsRenderer,
-  Rectangle,
-  InfoWindow
+  Rectangle
 } from 'react-google-maps'
 import shallowCompare from 'react-addons-shallow-compare';
+import RouteBoxInfoWindow from '../../components/InfoWindow';
 import RouteBoxMarker from '../../components/Marker';
 
 // This is the map renderer, to separate withGoogleMap from
@@ -36,18 +36,17 @@ const RenderMap = withGoogleMap(props => (
         >
         {
           marker.isInfoWindowOpen &&
-          <InfoWindow onCloseClick={() => props.onMarkerClick(marker)}>
-            <div>
-              <p><strong>{marker.name}</strong></p>
-              <p>{marker.details.formatted_address}</p>
-            </div>
-          </InfoWindow>
+          <RouteBoxInfoWindow
+            onCloseClick={() => props.onMarkerClick(marker)}
+            marker={marker}
+          />
         }
         </RouteBoxMarker>
       ))
     }
     {
-      props.drawBoxes && props.boxes.map((box, index) => {
+      props.drawBoxes && props.boxes && props.boxes.length &&
+      props.boxes.map((box, index) => {
         return <Rectangle
           defaultBounds={box}
           draggable={false}
@@ -65,6 +64,15 @@ class RouteBoxMap extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     // Only re-render when our props have changed
     if (nextProps.directions !== this.props.directions) {
+      return true;
+    }
+    if (nextProps.markers !== this.props.markers) {
+      return true;
+    }
+    if (nextProps.drawBoxes !== this.props.drawBoxes) {
+      return true;
+    }
+    if (nextProps.boxes !== this.props.boxes && this.props.drawBoxes) {
       return true;
     }
     return !shallowCompare(nextProps, this.props);

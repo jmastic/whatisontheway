@@ -1,0 +1,17 @@
+.place-inline-heading {
+  margin-right: 5px;
+}
+
+.place-details {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.place-photo {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.place-details p:first-of-type {
+  margin-top: 0;
+}
