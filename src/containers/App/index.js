@@ -20,6 +20,7 @@ class App extends Component {
       directions: null,
       markers: [],
       drawBoxes: false,
+      poiType: null,
       boxes: []
     };
   }
@@ -46,8 +47,8 @@ class App extends Component {
   // When the Google Map has mounted, save the map ref
   // so it can be used by the route boxer script
   onMapMounted(mapRef) {
-    console.log('[app] Map mounted', mapRef);
-    if (mapRef) {
+    if (mapRef && !this.state.mapRef) {
+      console.log('[app] Map mounted', mapRef);
       this.setState({
         mapRef: mapRef.context[Object.keys(mapRef.context)[0]],
         loading: false
@@ -63,6 +64,10 @@ class App extends Component {
       this.setState({
         drawBoxes: !!!this.state.drawBoxes
       });
+    }
+    if (event.keyCode === 27) {
+      // Hide all info windows on escape key
+      this.hideAllMarkerInfoWindows.call(this);
     }
   }
 
@@ -133,12 +138,37 @@ class App extends Component {
   // We do this here to take advantage of the mapRef that gets passed
   // up to this level of the app
   handleMarkerClick(marker) {
-    console.log('[app] Marker was clicked', marker);
+    // console.log('[app] Marker was clicked', marker);
     // Get the details for this marker
     this.getMarkerDetails(marker)
       .then((details) => {
-        marker.details = details;
+        this.setState({
+          markers: this.state.markers.map((mark) => {
+            if (mark.id === marker.id) {
+              mark.details = details;
+              // Also toggle this marker's info window
+              mark.isInfoWindowOpen = !!!mark.isInfoWindowOpen;
+              return mark;
+            }
+            // For all other markers, close the info window
+            mark.isInfoWindowOpen = false;
+            return mark;
+          })
+        });
       });
+  }
+
+  // Hide all marker info windows
+  hideAllMarkerInfoWindows() {
+    if (!this.state.markers || !this.state.markers.length) {
+      return;
+    }
+    this.setState({
+      markers: this.state.markers.map((marker) => {
+        marker.isInfoWindowOpen = false;
+        return marker;
+      })
+    });
   }
 
   // Get the details for a place/marker
@@ -150,25 +180,33 @@ class App extends Component {
         return resolve(marker.details);
       }
 
-      const placeRequest = {
-        reference: marker.reference
-      };
+      let placeRequest = { };
+      if (marker.reference) {
+        placeRequest.reference = marker.reference;
+      }
+      if (marker.placeId) {
+        placeRequest.placeId = marker.placeId;
+      }
       const google = window.google;
-      const service = new google.maps.places.PlacesService(this.state.map);
+      const service = new google.maps.places.PlacesService(this.state.mapRef);
   		service.getDetails(placeRequest, (details, status) => {
-        if (details) {
-          return resolve(details);
-        }
-        reject(details);
+        return details ? resolve(details) : reject(details);
       });
     });
   }
 
   // When a place has been changed by the Controls container
-  onPlacesChange(places) {
-    console.log('[app] Places updated')
-    const startAddress = places.startLocation,
-      endAddress = places.endLocation;
+  onPlacesChange(controls) {
+    console.log('[app] Places updated', controls);
+    const startAddress = controls.startLocation,
+      endAddress = controls.endLocation,
+      poiType = controls.poiType;
+
+    if (controls.poiType !== this.state.poiType) {
+      this.setState({
+        poiType: poiType
+      });
+    }
 
     // No need to update if the addresses haven't changed
     if (startAddress === this.state.startAddress &&
@@ -187,6 +225,15 @@ class App extends Component {
       startAddress: startAddress,
       endAddress: endAddress
     });
+
+    // If we only have one of the two addresses, we should just put a marker
+    // on the map
+    if ((startAddress && !endAddress)) {
+      return this.addMarker.call(this, startAddress);
+    }
+    if ((endAddress && !startAddress)) {
+      return this.addMarker.call(this, endAddress);
+    }
 
     // Addresses actually changed. Get the directions, search the route,
     // and display the results.
@@ -210,8 +257,30 @@ class App extends Component {
             directions: directions,
             loading: false
           });
+          // Now get the route boxes
+          searchRouteBox(this.state.directions, this.state.poiType, this.state.mapRef)
+            .then((results) => {
+              this.setState({
+                markers: results.places,
+                boxes: results.boxes
+              });
+            })
         });
     });
+  }
+
+  // Add a single marker, remove all other markers
+  addMarker(address) {
+    geocodeByAddress(address)
+      .then((results) => {
+        let marker = results[0];
+        marker.details = results[0];
+        this.setState({
+          markers: [marker],
+          loading: false
+        });
+        this.state.mapRef.fitBounds(marker.geometry.viewport);
+      });
   }
 
   render() {

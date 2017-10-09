@@ -8,8 +8,8 @@ class Controls extends Component {
     // Default state for the controls. Should have
     // start + end locations, and the type of place to look for
     this.state = {
-      startLocation: '18342 E Saskatoon Pl, Parker, CO, United States',
-      endLocation: 'Park Meadows Drive, Lone Tree, CO, United States',
+      startLocation: '',
+      endLocation: '',
       poiType: 'pet_store'
     };
   }
@@ -31,12 +31,12 @@ class Controls extends Component {
   // When the focus has shifted off of one of the Autocomplete components
   handleAutocompleteBlur() {
     console.log('[Controls] Autocomplete was triggered');
-    // Make sure we have both locations set
-    if (!this.state.startLocation || !this.state.endLocation) {
+    // Make sure we have at least one location set
+    if (!this.state.startLocation && !this.state.endLocation) {
       return;
     }
 
-    // So both locations are set. Send them up to the parent container
+    // So we have at least one location set. Send it all up to the parent
     // where they can be geocoded and displayed as markers.
     if (typeof this.props.onPlacesChange === 'function') {
       this.props.onPlacesChange(this.state);

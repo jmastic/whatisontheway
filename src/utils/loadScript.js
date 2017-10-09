@@ -2,8 +2,14 @@
 
 const loadScript = (url) => {
   var scriptPromise = new Promise((resolve, reject) => {
+    // Try to see if the script is already on the DOM
+    let script = document.querySelector(`script[src="${url}"]`);
+    if (script) {
+      return resolve(url);
+    }
+
     // Create a new script tag
-    var script = document.createElement('script');
+    script = document.createElement('script');
     // Use the url argument as source attribute
     script.src = url;
 
