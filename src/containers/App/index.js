@@ -202,17 +202,18 @@ class App extends Component {
       endAddress = controls.endLocation,
       poiType = controls.poiType;
 
-    if (controls.poiType !== this.state.poiType) {
+    // No need to update if nothing has changed
+    if (startAddress === this.state.startAddress
+      && endAddress === this.state.endAddress
+      && poiType === this.state.poiType
+    ) {
+      return;
+    }
+
+    if (poiType !== this.state.poiType) {
       this.setState({
         poiType: poiType
       });
-    }
-
-    // No need to update if the addresses haven't changed
-    if (startAddress === this.state.startAddress &&
-      endAddress === this.state.endAddress)
-    {
-      return;
     }
 
     // We're going to be looking up stuff, so show a loading message
