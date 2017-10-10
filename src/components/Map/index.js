@@ -46,16 +46,17 @@ const RenderMap = withGoogleMap(props => (
       : ''
     }
     {
-      props.drawBoxes && props.boxes && props.boxes.length &&
-      props.boxes.map((box, index) => {
-        return <Rectangle
-          defaultBounds={box}
-          draggable={false}
-          editable={false}
-          visible={props.drawBoxes}
-          key={index}
-        />
-      })
+      props.drawBoxes && props.boxes && props.boxes.length
+        ? props.boxes.map((box, index) => {
+          return <Rectangle
+            defaultBounds={box}
+            draggable={false}
+            editable={false}
+            visible={props.drawBoxes}
+            key={index}
+          />
+          })
+        : ''
     }
   </GoogleMap>
 ));
