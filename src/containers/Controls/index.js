@@ -11,8 +11,20 @@ class Controls extends Component {
     this.state = {
       startLocation: '',
       endLocation: '',
-      poiType: ''
+      poiType: '',
+      className: ''
     };
+  }
+
+  // When the mouse enters, try to set the classname
+  // to something else
+  onMouseEnter() {
+    if (this.state.className) {
+      return;
+    }
+    this.setState({
+      className: 'set'
+    });
   }
 
   // When the start location has changed
@@ -62,11 +74,15 @@ class Controls extends Component {
 
   render() {
     return (
-      <div id="Controls">
+      <div
+        id="Controls"
+        onMouseEnter={this.onMouseEnter.bind(this)}
+        className={this.state.className}
+      >
         <Autocomplete
           address={this.state.startLocation}
           onChange={this.handleStartLocationChange.bind(this)}
-          autoFocus={true}
+          autoFocus={false}
           type={"search"}
           onBlur={this.handleAutocompleteBlur.bind(this)}
           placeholder={"Start Location"}
