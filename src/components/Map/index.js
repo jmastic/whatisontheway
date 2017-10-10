@@ -27,22 +27,23 @@ const RenderMap = withGoogleMap(props => (
       <DirectionsRenderer directions={props.directions} />
     }
     {
-      props.markers && props.markers.length &&
-      props.markers.map((marker, index) => (
-        <RouteBoxMarker
-          position={marker.geometry.location}
-          onClick={() => props.onMarkerClick(marker)}
-          key={index}
-        >
-        {
-          marker.isInfoWindowOpen &&
-          <RouteBoxInfoWindow
-            onCloseClick={() => props.onMarkerClick(marker)}
-            marker={marker}
-          />
-        }
-        </RouteBoxMarker>
-      ))
+      props.markers && props.markers.length
+        ? props.markers.map((marker, index) => (
+          <RouteBoxMarker
+            position={marker.geometry.location}
+            onClick={() => props.onMarkerClick(marker)}
+            key={index}
+          >
+          {
+            marker.isInfoWindowOpen &&
+            <RouteBoxInfoWindow
+              onCloseClick={() => props.onMarkerClick(marker)}
+              marker={marker}
+            />
+          }
+          </RouteBoxMarker>
+        ))
+      : ''
     }
     {
       props.drawBoxes && props.boxes && props.boxes.length &&

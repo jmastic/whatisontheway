@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Autocomplete from '../../components/Autocomplete';
+import PoiTypePicker from '../../components/PoiTypePicker';
 import './index.css'
 
 class Controls extends Component {
@@ -10,7 +11,7 @@ class Controls extends Component {
     this.state = {
       startLocation: '',
       endLocation: '',
-      poiType: 'pet_store'
+      poiType: ''
     };
   }
 
@@ -25,6 +26,22 @@ class Controls extends Component {
   handleEndLocationChange(location) {
     this.setState({
       endLocation: location
+    });
+  }
+
+  // When the POI Type changes, update it
+  handlePoiTypeChange(poiType) {
+    if (!poiType) {
+      return;
+    }
+
+    // If we clicked the same POI Type,
+    // let's toggle it
+    const newPoiType = poiType === this.state.poiType ? '' : poiType;
+    this.setState({
+      poiType: newPoiType
+    }, () => {
+      this.handleAutocompleteBlur();
     });
   }
 
@@ -61,6 +78,10 @@ class Controls extends Component {
            type={"search"}
            onBlur={this.handleAutocompleteBlur.bind(this)}
            placeholder={"End Location"}
+        />
+        <PoiTypePicker
+          onTypeChange={this.handlePoiTypeChange.bind(this)}
+          activeType={this.state.poiType}
         />
       </div>
     )

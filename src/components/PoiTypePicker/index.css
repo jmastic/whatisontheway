@@ -1,0 +1,28 @@
+.place-list {
+  background: #fff;
+  height: 80px;
+  font-size: 80%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-width: max-content;
+  -webkit-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.23);
+  -moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.23);
+  box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.23);
+}
+
+.place-list div {
+  padding: 5px;
+}
+
+.place-list div:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+.place-list div.active {
+  background: #00d8ff;
+  color: #fff;
+}
+
+.place-list div:hover {
+  cursor: pointer;
+}

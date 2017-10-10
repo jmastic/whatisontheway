@@ -5,6 +5,25 @@
   width: 300px;
   max-width: 35%;
   z-index: 2;
+  opacity: .5;
+  -webkit-transition: ease opacity 0.5s;
+  -moz-transition: ease opacity 0.5s;
+  -o-transition: ease opacity 0.5s;
+  transition: ease opacity 0.5s;
+  -webkit-transition-delay: 1s;
+  -moz-transition-delay: 1s;
+  -ms-transition-delay: 1s;
+  -o-transition-delay: 1s;
+  transition-delay: 1s;
+}
+
+#Controls:active, #Controls:hover {
+  opacity: 1;
+  -webkit-transition-delay: 0s;
+  -moz-transition-delay: 0s;
+  -ms-transition-delay: 0s;
+  -o-transition-delay: 0s;
+  transition-delay: 0s;
 }
 
 #Controls input[type=text],
