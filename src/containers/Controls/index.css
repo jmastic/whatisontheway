@@ -5,7 +5,10 @@
   width: 300px;
   max-width: 35%;
   z-index: 2;
-  opacity: .25;
+}
+
+#Controls.set {
+  opacity: .45;
   -webkit-transition: ease opacity 0.5s;
   -moz-transition: ease opacity 0.5s;
   -o-transition: ease opacity 0.5s;
@@ -16,8 +19,7 @@
   -o-transition-delay: 1s;
   transition-delay: 1s;
 }
-
-#Controls:active, #Controls:hover {
+#Controls.set:active, #Controls.set:hover {
   opacity: 1;
   -webkit-transition-delay: 0s;
   -moz-transition-delay: 0s;
