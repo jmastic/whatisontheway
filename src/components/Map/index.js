@@ -20,6 +20,9 @@ const RenderMap = withGoogleMap(props => (
       lng: props.mapConfig && props.mapConfig.initialCenter
         && props.mapConfig.initialCenter.lng
     }}
+    defaultOptions={
+      { mapTypeControl: false }
+    }
     ref={props.onMapMounted}
   >
     {

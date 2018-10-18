@@ -1,6 +1,6 @@
 .place-list {
   background: #fff;
-  height: 80px;
+  height: 125px;
   font-size: 80%;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -11,7 +11,8 @@
 }
 
 .place-list div {
-  padding: 5px;
+  padding: 7px 5px 7px 10px;
+  color: #00000096;
 }
 
 .place-list div:nth-child(odd) {
@@ -19,8 +20,9 @@
 }
 
 .place-list div.active {
-  background: #00d8ff;
-  color: #fff;
+  /* background: #00d8ff; */
+  /* color: #fff; */
+  background: #00000030;
 }
 
 .place-list div:hover {
