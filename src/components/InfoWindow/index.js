@@ -10,7 +10,7 @@ class RouteBoxInfoWindow extends Component {
   }
 
   openingHours(hours) {
-    console.log('[InfoWindow] hours', hours);
+    // console.log('[InfoWindow] hours', hours);
     if (!hours) {
       return null;
     }
