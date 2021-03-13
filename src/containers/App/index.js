@@ -144,7 +144,7 @@ class App extends Component {
       .then((details) => {
         this.setState({
           markers: this.state.markers.map((mark) => {
-            if (mark.id === marker.id) {
+            if (mark.place_id === marker.place_id) {
               mark.details = details;
               // Also toggle this marker's info window
               mark.isInfoWindowOpen = !!!mark.isInfoWindowOpen;
