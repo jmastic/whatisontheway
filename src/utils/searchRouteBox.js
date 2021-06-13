@@ -7,7 +7,7 @@ const searchBoxes = (path, type, map) => {
   return new Promise((resolve, reject) => {
     const routeBoxer = new window.RouteBoxer();
     // Cover only .5 mile radius for now
-    boxes = routeBoxer.box(path, .8);
+    boxes = routeBoxer.box(path, .8) || [];
     const google = window.google;
 
     let boxPromises = [];
