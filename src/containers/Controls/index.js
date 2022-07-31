@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import Autocomplete from '../../components/Autocomplete';
-import PoiTypePicker from '../../components/PoiTypePicker';
-import './index.css'
+import React, { Component } from "react";
+import Autocomplete from "../../components/Autocomplete";
+import PoiTypePicker from "../../components/PoiTypePicker";
+import "./index.css";
 
 class Controls extends Component {
   constructor(props) {
@@ -9,10 +9,10 @@ class Controls extends Component {
     // Default state for the controls. Should have
     // start + end locations, and the type of place to look for
     this.state = {
-      startLocation: '',
-      endLocation: '',
-      poiType: '',
-      className: ''
+      startLocation: "",
+      endLocation: "",
+      poiType: "",
+      className: "",
     };
   }
 
@@ -23,21 +23,21 @@ class Controls extends Component {
       return;
     }
     this.setState({
-      className: 'set'
+      className: "set",
     });
   }
 
   // When the start location has changed
   handleStartLocationChange(location) {
     this.setState({
-      startLocation: location
+      startLocation: location,
     });
   }
 
   // When the end location has changed
   handleEndLocationChange(location) {
     this.setState({
-      endLocation: location
+      endLocation: location,
     });
   }
 
@@ -49,17 +49,20 @@ class Controls extends Component {
 
     // If we clicked the same POI Type,
     // let's toggle it
-    const newPoiType = poiType === this.state.poiType ? '' : poiType;
-    this.setState({
-      poiType: newPoiType
-    }, () => {
-      this.handleAutocompleteBlur();
-    });
+    const newPoiType = poiType === this.state.poiType ? "" : poiType;
+    this.setState(
+      {
+        poiType: newPoiType,
+      },
+      () => {
+        this.handleAutocompleteBlur();
+      }
+    );
   }
 
   // When the focus has shifted off of one of the Autocomplete components
   handleAutocompleteBlur() {
-    console.log('[Controls] Autocomplete was triggered');
+    // console.log('[Controls] Autocomplete was triggered');
     // Make sure we have at least one location set
     if (!this.state.startLocation && !this.state.endLocation) {
       return;
@@ -67,18 +70,14 @@ class Controls extends Component {
 
     // So we have at least one location set. Send it all up to the parent
     // where they can be geocoded and displayed as markers.
-    if (typeof this.props.onPlacesChange === 'function') {
+    if (typeof this.props.onPlacesChange === "function") {
       this.props.onPlacesChange(this.state);
     }
   }
 
   render() {
     return (
-      <div
-        id="Controls"
-        onMouseEnter={this.onMouseEnter.bind(this)}
-        className={this.state.className}
-      >
+      <div id="Controls" onMouseEnter={this.onMouseEnter.bind(this)} className={this.state.className}>
         <Autocomplete
           address={this.state.startLocation}
           onChange={this.handleStartLocationChange.bind(this)}
@@ -88,19 +87,16 @@ class Controls extends Component {
           placeholder={"Start Location"}
         />
         <Autocomplete
-           address={this.state.endLocation}
-           onChange={this.handleEndLocationChange.bind(this)}
-           autoFocus={false}
-           type={"search"}
-           onBlur={this.handleAutocompleteBlur.bind(this)}
-           placeholder={"End Location"}
+          address={this.state.endLocation}
+          onChange={this.handleEndLocationChange.bind(this)}
+          autoFocus={false}
+          type={"search"}
+          onBlur={this.handleAutocompleteBlur.bind(this)}
+          placeholder={"End Location"}
         />
-        <PoiTypePicker
-          onTypeChange={this.handlePoiTypeChange.bind(this)}
-          activeType={this.state.poiType}
-        />
+        <PoiTypePicker onTypeChange={this.handlePoiTypeChange.bind(this)} activeType={this.state.poiType} />
       </div>
-    )
+    );
   }
 }
 
