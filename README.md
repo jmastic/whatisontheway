@@ -4,6 +4,10 @@ What is on the way is an application to allow quick and easy searching for point
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Live Example
+
+This code has been deployed to Heroku and can be found at [https://www.whatisontheway.com](https://www.whatisontheway.com)
+
 ## Getting Started
 
 1. Update `.env.sample` with your Google API key
