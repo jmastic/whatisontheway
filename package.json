@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "dotenv": "^4.0.0",
     "prop-types": "^15.5.8",
     "react": "^15.6.1",
     "react-addons-shallow-compare": "^15.6.2",
@@ -15,7 +14,7 @@
     "react-scripts": "1.0.14"
   },
   "scripts": {
-    "start": "react-scripts -r dotenv/config start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
