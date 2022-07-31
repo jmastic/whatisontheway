@@ -1,22 +1,49 @@
-import React, { Component } from 'react';
-import PlacesAutocomplete from 'react-places-autocomplete'
-import './index.css'
+import PlacesAutocomplete from "react-places-autocomplete";
+import "./index.css";
 
-class Autocomplete extends Component {
-  render() {
-    const inputProps = {
-      value: this.props.address,
-      onChange: this.props.onChange,
-      placeholder: this.props.placeholder,
-      onBlur: this.props.onBlur,
-      type: this.props.type,
-      autoFocus: this.props.autoFocus
-    }
-
-    return (
-      <PlacesAutocomplete inputProps={inputProps} />
-    )
-  }
+function Autocomplete({ address, onChange, placeholder, onBlur, type, autoFocus, callbackFuncName }) {
+  return (
+    <PlacesAutocomplete
+      value={address}
+      onChange={onChange}
+      placeholder={placeholder}
+      onBlur={onBlur}
+      type={type}
+      autoFocus={autoFocus}
+      googleCallbackName={callbackFuncName}
+    >
+      {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+        <div>
+          <input
+            {...getInputProps({
+              placeholder: "Search Places ...",
+              className: "location-search-input",
+            })}
+          />
+          <div className="autocomplete-dropdown-container">
+            {loading && <div>Loading...</div>}
+            {suggestions.map((suggestion) => {
+              const className = suggestion.active ? "suggestion-item--active" : "suggestion-item";
+              // inline style for demonstration purpose
+              const style = suggestion.active
+                ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                : { backgroundColor: "#ffffff", cursor: "pointer" };
+              return (
+                <div
+                  {...getSuggestionItemProps(suggestion, {
+                    className,
+                    style,
+                  })}
+                >
+                  <span>{suggestion.description}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </PlacesAutocomplete>
+  );
 }
 
 export default Autocomplete;

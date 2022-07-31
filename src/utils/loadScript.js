@@ -9,21 +9,33 @@ const loadScript = (url) => {
     }
 
     // Create a new script tag
-    script = document.createElement('script');
+    script = document.createElement("script");
     // Use the url argument as source attribute
     script.src = url;
 
     // Call resolve when it’s loaded
-    script.addEventListener('load', () => { resolve(url) }, false);
+    script.addEventListener(
+      "load",
+      () => {
+        resolve(url);
+      },
+      false
+    );
 
     // Reject the promise if there’s an error
-    script.addEventListener('error', () => { reject(url) }, false);
+    script.addEventListener(
+      "error",
+      () => {
+        reject(url);
+      },
+      false
+    );
 
     // Add it to the body
     document.body.appendChild(script);
   });
 
   return scriptPromise;
-}
+};
 
 export default loadScript;

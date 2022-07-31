@@ -1,22 +1,16 @@
-import React, { Component } from 'react';
-import loadingSvg from './puff.svg';
-import './index.css'
+import React from "react";
+import image from "./puff.svg";
+import "./index.css";
 
 // Loading SVG from https://github.com/SamHerbert/SVG-Loaders
-class LoadingMessage extends Component {
-  render() {
-    const content = this.props.show ?
-      <div className="loading full-size">
-        <div className="loading-container">
-          <img
-            src={loadingSvg}
-            alt={"Loading"}
-          />
-        </div>
+function Loading() {
+  return (
+    <div className="loading full-size">
+      <div className="loading-container">
+        <img src={image} alt={"Loading"} />
       </div>
-      : <div></div>
-    return content;
-  }
+    </div>
+  );
 }
 
-export default LoadingMessage;
+export default Loading;
