@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import Map from '../Map';
-import Controls from '../Controls';
-import PropTypes from 'prop-types';
-import Script from 'react-load-script';
-import searchRouteBox from '../../utils/searchRouteBox';
-import LoadingMessage from '../../components/Loading';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
-import './index.css';
+import React, { Component } from "react";
+import Map from "../Map";
+import Controls from "../Controls";
+import PropTypes from "prop-types";
+import Script from "react-load-script";
+import searchRouteBox from "../../utils/searchRouteBox";
+import LoadingMessage from "../../components/Loading";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import "./index.css";
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class App extends Component {
       markers: [],
       drawBoxes: false,
       poiType: null,
-      boxes: []
+      boxes: [],
     };
   }
 
@@ -29,29 +29,29 @@ class App extends Component {
     return {
       config: PropTypes.shape({
         initialCenter: PropTypes.objectOf(PropTypes.number),
-        initialZoom: PropTypes.number
-      })
-    }
+        initialZoom: PropTypes.number,
+      }),
+    };
   }
 
   get mapSettings() {
     return {
       initialCenter: {
         lat: 39.7392,
-        lng: -104.9903
+        lng: -104.9903,
       },
       initialZoom: 10,
-    }
+    };
   }
 
   // When the Google Map has mounted, save the map ref
   // so it can be used by the route boxer script
   onMapMounted(mapRef) {
     if (mapRef && !this.state.mapRef) {
-      console.log('[app] Map mounted', mapRef);
+      // console.log("[app] Map mounted", mapRef);
       this.setState({
         mapRef: mapRef.context[Object.keys(mapRef.context)[0]],
-        loading: false
+        loading: false,
       });
     }
   }
@@ -62,7 +62,7 @@ class App extends Component {
   handleKeyPress(event) {
     if (event.keyCode === 190 && event.shiftKey) {
       this.setState({
-        drawBoxes: !!!this.state.drawBoxes
+        drawBoxes: !!!this.state.drawBoxes,
       });
     }
     if (event.keyCode === 27) {
@@ -73,25 +73,25 @@ class App extends Component {
 
   // When the Google API script has been created on the DOM
   handleScriptCreate() {
-    console.log('[app] Google Map script created');
+    console.log("[app] Google Map script created");
     this.setState({
-      googleApiLoaded: false
+      googleApiLoaded: false,
     });
   }
 
   // When the Google API script loading caused an error
   handleScriptError() {
-    console.log('[app] Google Map script load error');
+    console.log("[app] Google Map script load error");
     this.setState({
-      googleApiError: true
+      googleApiError: true,
     });
   }
 
   // When the Google API script has finished loading
   handleScriptLoad() {
-    console.log('[app] Google Map script loaded');
+    console.log("[app] Google Map script loaded");
     this.setState({
-      googleApiLoaded: true
+      googleApiLoaded: true,
     });
   }
 
@@ -108,15 +108,16 @@ class App extends Component {
         destination = new google.maps.LatLng(end.lat, end.lng),
         travelMode = google.maps.TravelMode.DRIVING;
 
-      DirectionsService.route({
-        origin: origin,
-        destination: destination,
-        travelMode: travelMode
-      }, (result, status) => {
-        return status === google.maps.DirectionsStatus.OK
-          ? resolve(result)
-          : reject(result);
-      });
+      DirectionsService.route(
+        {
+          origin: origin,
+          destination: destination,
+          travelMode: travelMode,
+        },
+        (result, status) => {
+          return status === google.maps.DirectionsStatus.OK ? resolve(result) : reject(result);
+        }
+      );
     });
   }
 
@@ -124,7 +125,7 @@ class App extends Component {
   geocodeAddress(address) {
     return new Promise((resolve, reject) => {
       if (!address) {
-        return reject('Address not provided');
+        return reject("Address not provided");
       }
 
       geocodeByAddress(address)
@@ -140,22 +141,21 @@ class App extends Component {
   handleMarkerClick(marker) {
     // console.log('[app] Marker was clicked', marker);
     // Get the details for this marker
-    this.getMarkerDetails(marker)
-      .then((details) => {
-        this.setState({
-          markers: this.state.markers.map((mark) => {
-            if (mark.place_id === marker.place_id) {
-              mark.details = details;
-              // Also toggle this marker's info window
-              mark.isInfoWindowOpen = !!!mark.isInfoWindowOpen;
-              return mark;
-            }
-            // For all other markers, close the info window
-            mark.isInfoWindowOpen = false;
+    this.getMarkerDetails(marker).then((details) => {
+      this.setState({
+        markers: this.state.markers.map((mark) => {
+          if (mark.place_id === marker.place_id) {
+            mark.details = details;
+            // Also toggle this marker's info window
+            mark.isInfoWindowOpen = !!!mark.isInfoWindowOpen;
             return mark;
-          })
-        });
+          }
+          // For all other markers, close the info window
+          mark.isInfoWindowOpen = false;
+          return mark;
+        }),
       });
+    });
   }
 
   // Hide all marker info windows
@@ -167,7 +167,7 @@ class App extends Component {
       markers: this.state.markers.map((marker) => {
         marker.isInfoWindowOpen = false;
         return marker;
-      })
+      }),
     });
   }
 
@@ -180,7 +180,7 @@ class App extends Component {
         return resolve(marker.details);
       }
 
-      let placeRequest = { };
+      let placeRequest = {};
       if (marker.reference) {
         placeRequest.reference = marker.reference;
       }
@@ -189,7 +189,7 @@ class App extends Component {
       }
       const google = window.google;
       const service = new google.maps.places.PlacesService(this.state.mapRef);
-  		service.getDetails(placeRequest, (details, status) => {
+      service.getDetails(placeRequest, (details, status) => {
         return details ? resolve(details) : reject(details);
       });
     });
@@ -197,42 +197,43 @@ class App extends Component {
 
   // When a place has been changed by the Controls container
   onPlacesChange(controls) {
-    console.log('[app] Places updated', controls);
+    // console.log("[app] Places updated", controls);
     const startAddress = controls.startLocation,
       endAddress = controls.endLocation,
       poiType = controls.poiType;
 
     // No need to update if nothing has changed
-    if (startAddress === this.state.startAddress
-      && endAddress === this.state.endAddress
-      && poiType === this.state.poiType
+    if (
+      startAddress === this.state.startAddress &&
+      endAddress === this.state.endAddress &&
+      poiType === this.state.poiType
     ) {
       return;
     }
 
     if (poiType !== this.state.poiType) {
       this.setState({
-        poiType: poiType
+        poiType: poiType,
       });
     }
 
     // We're going to be looking up stuff, so show a loading message
     this.setState({
-      loading: true
+      loading: true,
     });
 
     // Save the addresses in state so we don't needlessly re-call Google APIs
     this.setState({
       startAddress: startAddress,
-      endAddress: endAddress
+      endAddress: endAddress,
     });
 
     // If we only have one of the two addresses, we should just put a marker
     // on the map
-    if ((startAddress && !endAddress)) {
+    if (startAddress && !endAddress) {
       return this.addMarker.call(this, startAddress);
     }
-    if ((endAddress && !startAddress)) {
+    if (endAddress && !startAddress) {
       return this.addMarker.call(this, endAddress);
     }
 
@@ -240,84 +241,74 @@ class App extends Component {
     // and display the results.
     Promise.all([
       new Promise((resolve, reject) => {
-        this.geocodeAddress(startAddress)
-          .then((latLng) => resolve({ origin: latLng }));
+        this.geocodeAddress(startAddress).then((latLng) => resolve({ origin: latLng }));
       }),
       new Promise((resolve, reject) => {
-        this.geocodeAddress(endAddress)
-          .then((latLng) => resolve({ destination: latLng }));
-      })
-    ])
-    .then((values) => {
+        this.geocodeAddress(endAddress).then((latLng) => resolve({ destination: latLng }));
+      }),
+    ]).then((values) => {
       const origin = values[0].origin || values[1].origin;
       const destination = values[0].destination || values[1].destination;
-      this.getDirections(origin, destination)
-        .then((directions) => {
-          console.log('[app] Got directions', directions);
-          this.setState({
-            directions: directions,
-            loading: false
-          });
-          // Now get the route boxes
-          searchRouteBox(this.state.directions, this.state.poiType, this.state.mapRef)
-            .then((results) => {
-              this.setState({
-                markers: results.places,
-                boxes: results.boxes
-              });
-            })
+      this.getDirections(origin, destination).then((directions) => {
+        // console.log("[app] Got directions", directions);
+        this.setState({
+          directions: directions,
+          loading: false,
         });
+        // Now get the route boxes
+        searchRouteBox(this.state.directions, this.state.poiType, this.state.mapRef).then((results) => {
+          this.setState({
+            markers: results.places,
+            boxes: results.boxes,
+          });
+        });
+      });
     });
   }
 
   // Add a single marker, remove all other markers
   addMarker(address) {
-    geocodeByAddress(address)
-      .then((results) => {
-        let marker = results[0];
-        marker.details = results[0];
-        this.setState({
-          markers: [marker],
-          loading: false
-        });
-        this.state.mapRef.fitBounds(marker.geometry.viewport);
+    geocodeByAddress(address).then((results) => {
+      let marker = results[0];
+      marker.details = results[0];
+      this.setState({
+        markers: [marker],
+        loading: false,
       });
+      this.state.mapRef.fitBounds(marker.geometry.viewport);
+    });
   }
 
   render() {
     let content;
     if (this.state.googleApiLoaded) {
-      content = <div className="full-size" onKeyDown={this.handleKeyPress.bind(this)}>
-        <LoadingMessage
-          show={this.state.loading}
-        />
-        <Controls
-          onPlacesChange={this.onPlacesChange.bind(this)}
-        />
-        <Map
-          directions={this.state.directions}
-          markers={this.state.markers}
-          onMarkerClick={this.handleMarkerClick.bind(this)}
-          drawBoxes={this.state.drawBoxes}
-          boxes={this.state.boxes}
-          config={this.mapSettings}
-          onMapMounted={this.onMapMounted.bind(this)}
-        />
-      </div>;
+      content = (
+        <div className="full-size" onKeyDown={this.handleKeyPress.bind(this)}>
+          <LoadingMessage show={this.state.loading} />
+          <Controls onPlacesChange={this.onPlacesChange.bind(this)} />
+          <Map
+            directions={this.state.directions}
+            markers={this.state.markers}
+            onMarkerClick={this.handleMarkerClick.bind(this)}
+            drawBoxes={this.state.drawBoxes}
+            boxes={this.state.boxes}
+            config={this.mapSettings}
+            onMapMounted={this.onMapMounted.bind(this)}
+          />
+        </div>
+      );
     } else {
-      content = <Script
-        url={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`}
-        onCreate={this.handleScriptCreate.bind(this)}
-        onError={this.handleScriptError.bind(this)}
-        onLoad={this.handleScriptLoad.bind(this)}
-      />;
+      content = (
+        <Script
+          url={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`}
+          onCreate={this.handleScriptCreate.bind(this)}
+          onError={this.handleScriptError.bind(this)}
+          onLoad={this.handleScriptLoad.bind(this)}
+        />
+      );
     }
 
-    return (
-      <div className="full-size">
-        {content}
-      </div>
-    )
+    return <div className="full-size">{content}</div>;
   }
 }
 
