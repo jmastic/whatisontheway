@@ -30,3 +30,7 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run-script heroku`
+
+Pushes this repository to a predefined Heroku repository. For steps to deploy to Heroku, visit the [Heroku documentation](https://devcenter.heroku.com/articles/git) for more information.
