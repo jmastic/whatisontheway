@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './containers/App';
-import registerServiceWorker from './registerServiceWorker';
-require('dotenv').config();
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./containers/App";
+import registerServiceWorker from "./registerServiceWorker";
+require("dotenv").config();
 
-const rootEl = document.getElementById('root');
+const rootEl = document.getElementById("root");
 const render = (Component) =>
   ReactDOM.render(
     <App>
@@ -18,5 +18,5 @@ render(App);
 registerServiceWorker();
 
 if (module.hot) {
-  module.hot.accept('./containers/App/index', () => render(App));
+  module.hot.accept("./containers/App/index", () => render(App));
 }

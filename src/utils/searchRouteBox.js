@@ -1,5 +1,7 @@
 import loadScript from "./loadScript";
 import * as Constants from "../constants";
+import getRandomSample from "./getRandomSample";
+import { getNumberAtRangePercent, getPercentageInRange } from "./rangePercentage";
 
 // This is some magic to determine how big to make the bounds
 // The further the distance of the path, the larger the boxes we want to have
@@ -7,23 +9,6 @@ const maxKilometersBoxBoundary = Constants.MAX_MILES_FROM_PATH_TO_BOUNDS * 0.621
 const minKilometersBoxBoundary = Constants.MIN_MILES_FROM_PATH_TO_BOUNDS * 0.621371;
 const maxKilometersPathDistance = Constants.MAX_MILES_PATH_RANGE * 0.621371;
 const minKilometersPathDistance = Constants.MIN_MILES_PATH_RANGE * 0.621371;
-
-const getMultipleRandom = (arr, num) => {
-  const shuffled = [...arr].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, num);
-};
-
-const getBoxDistance = (input) => {
-  let distancePercentage = (input - minKilometersBoxBoundary) / (maxKilometersPathDistance - minKilometersPathDistance);
-  if (distancePercentage > 1) {
-    distancePercentage = 1;
-  } else if (distancePercentage < 0) {
-    distancePercentage = 0;
-  }
-  let distanceAbsolute =
-    distancePercentage * (maxKilometersBoxBoundary - minKilometersBoxBoundary) + minKilometersBoxBoundary;
-  return distanceAbsolute;
-};
 
 const searchBoxes = (path, type, map, pathDistanceInMeters) => {
   let boxes = [];
@@ -35,7 +20,12 @@ const searchBoxes = (path, type, map, pathDistanceInMeters) => {
     // Get the length of the path
     const pathLengthKilometers = pathDistanceInMeters / 1000;
     // Scale will be minimum to maximum kms bounds
-    const kilometersFromPathToBounds = getBoxDistance(pathLengthKilometers);
+    const percentage = getPercentageInRange(pathLengthKilometers, maxKilometersPathDistance, minKilometersPathDistance);
+    const kilometersFromPathToBounds = getNumberAtRangePercent(
+      percentage,
+      maxKilometersBoxBoundary,
+      minKilometersBoxBoundary
+    );
 
     boxes = routeBoxer.box(path, kilometersFromPathToBounds) || [];
     let boxesToSearch = [...boxes];
@@ -49,7 +39,7 @@ const searchBoxes = (path, type, map, pathDistanceInMeters) => {
     // If we have more boxes in the path than the maximum boxes to search (for performance and limits reasons)
     // Then select a random sample of boxes in the path.
     if (boxes.length > maxBoxes) {
-      boxesToSearch = getMultipleRandom(boxes, maxBoxes);
+      boxesToSearch = getRandomSample(boxes, maxBoxes);
     }
 
     const maxPlacesPerBox = Math.ceil(maxPlaces / boxesToSearch.length);
