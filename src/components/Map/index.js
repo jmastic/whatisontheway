@@ -1,40 +1,51 @@
 import React, { Component } from "react";
-import { withGoogleMap, GoogleMap, DirectionsRenderer, Rectangle } from "react-google-maps";
+import { LoadScript, GoogleMap, DirectionsRenderer, Rectangle } from "@react-google-maps/api";
 import shallowCompare from "react-addons-shallow-compare";
 import RouteBoxInfoWindow from "../../components/InfoWindow";
 import RouteBoxMarker from "../../components/Marker";
 
 // This is the map renderer, to separate withGoogleMap from
 // the main class
-const RenderMap = withGoogleMap((props) => (
+const RenderMap = (props) => (
+  // <GoogleMap
+  //   defaultZoom={props.mapConfig && props.mapConfig.initialZoom}
+  //   defaultCenter={{
+  //     lat: props.mapConfig && props.mapConfig.initialCenter && props.mapConfig.initialCenter.lat,
+  //     lng: props.mapConfig && props.mapConfig.initialCenter && props.mapConfig.initialCenter.lng,
+  //   }}
+  //   defaultOptions={{ mapTypeControl: false }}
+  //   ref={props.onMapMounted}
+  // >
+  //   {props.directions && <DirectionsRenderer directions={props.directions} />}
+  //   {props.markers && props.markers.length
+  //     ? props.markers.map((marker, index) => (
+  //         <RouteBoxMarker position={marker.geometry.location} onClick={() => props.onMarkerClick(marker)} key={index}>
+  //           {marker.isInfoWindowOpen && (
+  //             <RouteBoxInfoWindow onCloseClick={() => props.onMarkerClick(marker)} marker={marker} />
+  //           )}
+  //         </RouteBoxMarker>
+  //       ))
+  //     : ""}
+  //   {props.drawBoxes && props.boxes && props.boxes.length
+  //     ? props.boxes.map((box, index) => {
+  //         return (
+  //           <Rectangle defaultBounds={box} draggable={false} editable={false} visible={props.drawBoxes} key={index} />
+  //         );
+  //       })
+  //     : ""}
+  // </GoogleMap>
+  // <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
   <GoogleMap
-    defaultZoom={props.mapConfig && props.mapConfig.initialZoom}
-    defaultCenter={{
-      lat: props.mapConfig && props.mapConfig.initialCenter && props.mapConfig.initialCenter.lat,
-      lng: props.mapConfig && props.mapConfig.initialCenter && props.mapConfig.initialCenter.lng,
+    zoom={10}
+    onLoad={(map) => {
+      console.log("map loaded", map);
     }}
-    defaultOptions={{ mapTypeControl: false }}
-    ref={props.onMapMounted}
+    mapContainerStyle={{ width: "100%", height: "100%" }}
   >
-    {props.directions && <DirectionsRenderer directions={props.directions} />}
-    {props.markers && props.markers.length
-      ? props.markers.map((marker, index) => (
-          <RouteBoxMarker position={marker.geometry.location} onClick={() => props.onMarkerClick(marker)} key={index}>
-            {marker.isInfoWindowOpen && (
-              <RouteBoxInfoWindow onCloseClick={() => props.onMarkerClick(marker)} marker={marker} />
-            )}
-          </RouteBoxMarker>
-        ))
-      : ""}
-    {props.drawBoxes && props.boxes && props.boxes.length
-      ? props.boxes.map((box, index) => {
-          return (
-            <Rectangle defaultBounds={box} draggable={false} editable={false} visible={props.drawBoxes} key={index} />
-          );
-        })
-      : ""}
+    <></>
   </GoogleMap>
-));
+  // </LoadScript>
+);
 
 // The main RouteBoxMap class
 class RouteBoxMap extends Component {

@@ -284,7 +284,7 @@ class App extends Component {
     if (this.state.googleApiLoaded) {
       content = (
         <div className="full-size" onKeyDown={this.handleKeyPress.bind(this)}>
-          <LoadingMessage show={this.state.loading} />
+          {/* <LoadingMessage show={this.state.loading} /> */}
           <Controls onPlacesChange={this.onPlacesChange.bind(this)} />
           <Map
             directions={this.state.directions}
