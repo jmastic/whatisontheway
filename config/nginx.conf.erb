@@ -33,19 +33,34 @@ http {
   client_body_timeout 5;
 
   server {
-    listen 41111 reuseport;
+    listen 38169 reuseport;
     charset UTF-8;
     port_in_redirect off;
     keepalive_timeout 5;
     root build/;
 
+
+
+
+
+
     location / {
+
       try_files $uri $uri/;
+
     }
+
+
+
+
+
+
+
 
     location ~ ^/.*$ {
       set $route /.*;
-      try_files $uri $path;
+
+      try_files $uri $path ;
 
     }
 
@@ -54,5 +69,12 @@ http {
   location @404 {
     return 404;
   }
+
+  # fallback proxy named match
+
+
+  # fallback redirects named match
+
+
   }
 }
