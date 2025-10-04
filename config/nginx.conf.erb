@@ -1,79 +1,22 @@
+worker_processes <%= ENV['NGINX_WORKERS'] || 1 %>;
 daemon off;
-worker_processes auto;
 
 events {
-  use epoll;
-  accept_mutex on;
-  worker_connections 512;
+  worker_connections 1024;
 }
 
 http {
-  gzip on;
-  gzip_comp_level 6;
-  gzip_min_length 512;
-  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
-  gzip_vary on;
-  gzip_proxied any;
-
-  server_tokens off;
-
-
-  access_log logs/access.log;
-
-
-
-  error_log stderr error;
-
-
   include mime.types;
   default_type application/octet-stream;
   sendfile on;
 
-  #Must read the body in 5 seconds.
-  client_body_timeout 5;
-
   server {
-    listen 41111 reuseport;
-    charset UTF-8;
-    port_in_redirect off;
-    keepalive_timeout 5;
-    root build/;
-
-
-
-
+    listen <%= ENV["PORT"] %>;
+    server_name localhost;
 
     location / {
-
-      try_files $uri $uri/;
-
+      root /app/build;
+      try_files $uri /index.html;
     }
-
-
-
-
-
-
-
-
-    location ~ ^/.*$ {
-      set $route /.*;
-
-      try_files $uri $path ;
-
-    }
-
-
-  # need this b/c setting $fallback to =404 will try #{root}=404 instead of returning a 404
-  location @404 {
-    return 404;
-  }
-
-  # fallback proxy named match
-
-
-  # fallback redirects named match
-
-
   }
 }
